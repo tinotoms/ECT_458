@@ -19,10 +19,24 @@
   .card h4 { color: #3498db; font-size: 12px; margin: 8px 0 4px; }
   .card p, .card li { font-size: 12px; color: #ccc; margin-bottom: 3px; }
   .card ul { padding-left: 16px; }
+  /* ---- repeat-count badges ---- */
   .badge { display: inline-block; background: #1a6bb5; color: white; font-size: 10px; padding: 1px 6px; border-radius: 10px; margin-left: 6px; vertical-align: middle; }
   .badge.yellow { background: #e67e22; }
-  .badge.green { background: #27ae60; }
-  .badge.red { background: #c0392b; }
+  .badge.green  { background: #27ae60; }
+  .badge.red    { background: #c0392b; }
+  /* frequency pill — shown next to heading */
+  .freq { display: inline-block; font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 10px; margin-left: 8px; vertical-align: middle; }
+  .f5 { background: #c0392b; color: #fff; }   /* 5× — must know  */
+  .f4 { background: #e67e22; color: #fff; }   /* 4× — very high  */
+  .f3 { background: #f1c40f; color: #333; }   /* 3× — high       */
+  .f2 { background: #2980b9; color: #fff; }   /* 2× — medium     */
+  .f1 { background: #555;    color: #ccc; }   /* 1× — low        */
+  /* freq legend strip */
+  .freq-legend { display: flex; flex-wrap: wrap; gap: 8px; padding: 8px 12px; background: #161616; border-radius: 4px; margin-bottom: 12px; font-size: 11px; }
+  .freq-legend span { display: flex; align-items: center; gap: 5px; color: #aaa; }
+  /* priority bar inside HOT Q tab */
+  .pbar-wrap { height: 5px; background: #2a2a2a; border-radius: 3px; margin: 4px 0 2px; }
+  .pbar { height: 5px; border-radius: 3px; }
   table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 6px; }
   th { background: #2a2a2a; color: #f39c12; padding: 5px 7px; text-align: left; }
   td { padding: 4px 7px; border-bottom: 1px solid #2a2a2a; color: #ccc; }
@@ -41,14 +55,23 @@
   <div class="tab active" onclick="show('m3', this)">M3: Access Technologies</div>
   <div class="tab" onclick="show('m4', this)">M4: Cloud &amp; Devices</div>
   <div class="tab" onclick="show('m5', this)">M5: Security &amp; Smart Cities</div>
-  <div class="tab" onclick="show('hotq', this)">🔥 HOT Q's</div>
+  <div class="tab" onclick="show('hotq', this)">🔥 HOT Q's + Repeat Map</div>
+</div>
+
+<!-- shared legend (shown in all tabs via JS) -->
+<div class="freq-legend" id="freq-legend-bar">
+  <span><span class="freq f5">5×</span> Must know — appeared every paper</span>
+  <span><span class="freq f4">4×</span> Very high priority</span>
+  <span><span class="freq f3">3×</span> High priority</span>
+  <span><span class="freq f2">2×</span> Medium priority</span>
+  <span><span class="freq f1">1×</span> Low / appeared once</span>
 </div>
 
 <!-- ===== MODULE 3 ===== -->
 <div id="m3" class="content active">
 
   <div class="card">
-    <h3>IEEE 802.15.4 — Physical Layer <span class="badge yellow">★★★ Every Paper</span></h3>
+    <h3>IEEE 802.15.4 — Physical Layer <span class="badge yellow">★★★ Every Paper</span><span class="freq f5">5×</span></h3>
     <p>Standard for Low-Rate Wireless PANs (LR-WPANs). Used by ZigBee, 6LoWPAN.</p>
     <h4>Frequency Bands &amp; Data Rates:</h4>
     <ul>
@@ -71,10 +94,10 @@
   </div>
 
   <div class="card">
-    <h3>IEEE 802.15.4 — MAC Layer &amp; Security <span class="badge yellow">★★★</span></h3>
+    <h3>IEEE 802.15.4 — MAC Layer &amp; Security <span class="badge yellow">★★★</span><span class="freq f5">5×</span></h3>
     <h4>MAC Responsibilities:</h4>
     <ul>
-      <li>Channel access via <b>CSMA-CA</b> (Carrier Sense Multiple Access with Collision Avoidance)</li>
+      <li>Channel access via <b>CSMA-CA</b></li>
       <li>Network beaconing (coordinator broadcasts beacon for synchronization)</li>
       <li>PAN association/disassociation, reliable link comms via ACK frames</li>
     </ul>
@@ -94,14 +117,14 @@
     <ul>
       <li><b>AES-128 Encryption</b> — Base algorithm for all security modes</li>
       <li><b>MIC (Message Integrity Code)</b> — Computed using AES over entire frame; receiver recomputes and compares</li>
-      <li><b>Auxiliary Security Header</b> — Added when security enabled: Security Control + Frame Counter + Key Identifier</li>
+      <li><b>Auxiliary Security Header</b> — Security Control + Frame Counter + Key Identifier</li>
       <li><b>AES-CCM*</b> — Supports: encryption only, MIC only, or both combined</li>
     </ul>
     <p style="margin-top:5px;color:#aaa;">Security-enabled frame: MHR | Aux Security Header | Encrypted Payload | MIC (4/8/16B) | FCS</p>
   </div>
 
   <div class="card">
-    <h3>IEEE 802.15.4e vs 802.15.4g <span class="badge yellow">★★★</span></h3>
+    <h3>IEEE 802.15.4e vs 802.15.4g <span class="badge yellow">★★★</span><span class="freq f4">4×</span></h3>
     <table>
       <tr><th>Feature</th><th>IEEE 802.15.4e</th><th>IEEE 802.15.4g</th></tr>
       <tr><td><b>Layer Modified</b></td><td>MAC layer only</td><td>PHY layer only</td></tr>
@@ -122,7 +145,7 @@
   </div>
 
   <div class="card">
-    <h3>ZigBee Protocol Stack &amp; Features <span class="badge yellow">★★★ Every Paper</span></h3>
+    <h3>ZigBee Protocol Stack &amp; Features <span class="badge yellow">★★★ Every Paper</span><span class="freq f4">4×</span></h3>
     <p>High-level protocol built on IEEE 802.15.4. Promoted by ZigBee Alliance. Low power, low bandwidth sensors.</p>
     <h4>Protocol Stack (top → bottom):</h4>
     <table>
@@ -141,7 +164,7 @@
     </ul>
     <h4>ZigBee Key Features:</h4>
     <ul>
-      <li>Up to <b>65,000 devices</b> in a single PAN | Range: 10–100 m indoors | Data rate: 20–250 kbps</li>
+      <li>Up to <b>65,000 devices</b> in a single PAN | Range: 10–100 m | Data rate: 20–250 kbps</li>
       <li><b>AODV Routing</b> — On-demand; route discovered only when needed → minimizes overhead</li>
       <li><b>AES-128</b> at both network and application layers (dual-layer security)</li>
       <li>Self-forming and self-healing mesh networks</li>
@@ -149,7 +172,7 @@
   </div>
 
   <div class="card">
-    <h3>LoRaWAN — Architecture &amp; Physical Layer <span class="badge yellow">★★★ Every Paper</span></h3>
+    <h3>LoRaWAN — Architecture &amp; Physical Layer <span class="badge yellow">★★★ Every Paper</span><span class="freq f5">5×</span></h3>
     <p>LPWAN protocol for long-range battery-operated IoT. LoRa PHY by Semtech. MAC/architecture by LoRa Alliance.</p>
     <h4>Star-of-Stars Architecture:</h4>
     <table>
@@ -172,11 +195,11 @@
       <tr><td>SF9</td><td>1760 bps</td><td>Medium</td></tr>
       <tr><td>SF12</td><td>250 bps</td><td>Longest (~15 km rural)</td></tr>
     </table>
-    <p style="margin-top:5px;color:#aaa;"><b>ADR (Adaptive Data Rate)</b> — Endpoints close to gateway use high data rate &amp; low power; distant endpoints use low data rate &amp; high power.</p>
+    <p style="margin-top:5px;color:#aaa;"><b>ADR (Adaptive Data Rate)</b> — Endpoints close to gateway: high data rate &amp; low power. Distant: low data rate &amp; high power.</p>
   </div>
 
   <div class="card">
-    <h3>LoRaWAN — MAC Layer (Device Classes &amp; Security) <span class="badge yellow">★★★</span></h3>
+    <h3>LoRaWAN — MAC Layer (Device Classes &amp; Security) <span class="badge yellow">★★★</span><span class="freq f5">5×</span></h3>
     <h4>Device Classes:</h4>
     <table>
       <tr><th>Class</th><th>RX Windows</th><th>Power</th><th>Use Case</th></tr>
@@ -186,8 +209,8 @@
     </table>
     <h4>LoRaWAN Security (Two-Layer AES-128):</h4>
     <ul>
-      <li><b>NwkSKey</b> (Network Session Key) — MAC layer: endpoint authentication + MIC computation/verification</li>
-      <li><b>AppSKey</b> (Application Session Key) — Encrypts/decrypts app payloads between endpoint and app server. Network server <b>cannot read</b> app data</li>
+      <li><b>NwkSKey</b> — MAC layer: endpoint authentication + MIC computation/verification</li>
+      <li><b>AppSKey</b> — Encrypts/decrypts app payloads. Network server <b>cannot read</b> app data</li>
       <li><b>AppKey</b> — AES-128 root key for device provisioning (OTAA activation)</li>
     </ul>
     <h4>Endpoint Addressing:</h4>
@@ -201,8 +224,8 @@
   </div>
 
   <div class="card">
-    <h3>LTE-M vs NB-IoT <span class="badge yellow">★★★ Every Paper</span></h3>
-    <p>Both 3GPP Release 13 (2016) LPWA standards — designed for battery-powered IoT. Replace legacy GPRS IoT.</p>
+    <h3>LTE-M vs NB-IoT <span class="badge yellow">★★★ Every Paper</span><span class="freq f4">4×</span></h3>
+    <p>Both 3GPP Release 13 (2016) LPWA standards. Replace legacy GPRS IoT.</p>
     <table>
       <tr><th>Parameter</th><th>LTE-M (Cat-M1)</th><th>NB-IoT</th></tr>
       <tr><td><b>Bandwidth</b></td><td>1.4 MHz</td><td>200 kHz (1 LTE resource block)</td></tr>
@@ -216,7 +239,7 @@
       <tr><td><b>Battery Life</b></td><td>~10 years</td><td>&gt;10 years</td></tr>
       <tr><td><b>Target Apps</b></td><td>Wearables, asset tracking, voice IoT</td><td>Smart meters, smart city sensors, agriculture</td></tr>
     </table>
-    <h4>NB-IoT Deployment Modes:</h4>
+    <h4>NB-IoT Deployment Modes: <span class="freq f3">3×</span></h4>
     <ul>
       <li><b>Standalone</b> — Replaces existing 200 kHz GSM carrier (900/1800 MHz); ideal for 2G migration</li>
       <li><b>In-band</b> — One LTE Physical Resource Block dedicated to NB-IoT inside existing LTE carrier</li>
@@ -226,36 +249,36 @@
   </div>
 
   <div class="card">
-    <h3>6LoWPAN Adaptation Layer <span class="badge yellow">★★★ Every Paper</span></h3>
-    <p>IPv6 over Low-Power Wireless PANs. IETF adaptation layer between IEEE 802.15.4 and IPv6. RFCs 4944, 6282, 6775. Only supports IPv6 (not IPv4).</p>
+    <h3>6LoWPAN Adaptation Layer <span class="badge yellow">★★★ Every Paper</span><span class="freq f3">3×</span></h3>
+    <p>IPv6 over Low-Power Wireless PANs. IETF RFCs 4944, 6282, 6775. Only supports IPv6 (not IPv4).</p>
     <p style="margin-top:4px;"><b>Core Problem:</b> IPv6 min MTU = 1280 bytes; 802.15.4 max frame = 127 bytes. IPv6 header = 40B + UDP = 8B — too large!</p>
     <h4>Three Key Functions:</h4>
     <h4>1. Header Compression (IPHC — RFC 6282):</h4>
     <ul>
       <li>Compresses IPv6 (40B) + UDP (8B) headers down to <b>as few as 6 bytes</b> combined</li>
-      <li>Elides fields with assumed values: Version, Traffic Class, Flow Label, Payload Length, Next Header, Hop Limit, Src/Dst Addresses (derived from IEEE MAC addresses)</li>
+      <li>Elides fields with assumed values: Version, Traffic Class, Flow Label, Payload Length, Next Header, Hop Limit, Src/Dst Addresses</li>
     </ul>
     <h4>2. Fragmentation &amp; Reassembly:</h4>
     <ul>
       <li>Large IPv6 packets fragmented into multiple 127-byte 802.15.4 frames at Layer 2</li>
       <li><b>Datagram Size (11 bits)</b> — Total unfragmented payload size</li>
       <li><b>Datagram Tag (16 bits)</b> — Identifies all fragments of same packet</li>
-      <li><b>Datagram Offset (8 bits)</b> — Where this fragment starts in original payload (multiples of 8)</li>
+      <li><b>Datagram Offset (8 bits)</b> — Where this fragment starts (multiples of 8)</li>
       <li>First fragment = FRAG1 (no offset); subsequent = FRAGN (with offset)</li>
     </ul>
     <h4>3. Mesh Addressing:</h4>
     <ul>
-      <li>Layer-2 multi-hop packet forwarding without full IP stack at each intermediate node</li>
+      <li>Layer-2 multi-hop packet forwarding without full IP stack at each node</li>
       <li>Fields: Hop Limit, Source MAC address, Destination MAC address</li>
     </ul>
     <p style="margin-top:5px;color:#aaa;"><b>Dispatch byte</b> at start of frame indicates active capabilities: NALP / Uncompressed IPv6 / IPHC / Mesh / FRAG1 / FRAGN</p>
   </div>
 
   <div class="card">
-    <h3>RPL — Routing Protocol for Low Power and Lossy Networks <span class="badge yellow">★★★</span></h3>
-    <p>IPv6 distance-vector routing protocol (IETF RFC 6550) for IoT. Works in Low Power and Lossy Networks (LLNs) with high packet loss, limited memory/CPU, battery constraints.</p>
+    <h3>RPL — Routing Protocol for Low Power and Lossy Networks <span class="badge yellow">★★★</span><span class="freq f3">3×</span></h3>
+    <p>IPv6 distance-vector routing protocol (IETF RFC 6550) for IoT.</p>
     <h4>Network Structure — DODAG:</h4>
-    <p>Builds a <b>Destination-Oriented Directed Acyclic Graph (DODAG)</b> rooted at a border router. Each node maintains up to 3 parents (preferred parent = best next-hop toward root). <b>Rank</b> approximates distance from root, preventing routing loops.</p>
+    <p>Builds a <b>Destination-Oriented Directed Acyclic Graph (DODAG)</b> rooted at a border router. Each node maintains up to 3 parents. <b>Rank</b> approximates distance from root, preventing routing loops.</p>
     <h4>Route Discovery Messages:</h4>
     <table>
       <tr><th>Message</th><th>Direction</th><th>Purpose</th></tr>
@@ -269,26 +292,25 @@
       <li><b>Non-Storing Mode</b> — Only border router holds table; source-routes downward. Memory-efficient.</li>
     </ul>
     <h4>Objective Function &amp; Metrics:</h4>
-    <p>Defines how metrics combine to compute rank. Metrics: <b>ETX</b> (Expected Transmission Count), Hop Count, Latency, Link Quality Level, Node Energy, Throughput, Link Color.</p>
+    <p>Metrics: <b>ETX</b> (Expected Transmission Count), Hop Count, Latency, Link Quality Level, Node Energy, Throughput, Link Color.</p>
   </div>
 
   <div class="card">
-    <h3>Modbus Protocol <span class="badge">★★</span></h3>
-    <p>Industrial serial communication protocol by Modicon (1979). Widely used in industrial IoT, SCADA, building automation.</p>
+    <h3>Modbus Protocol <span class="badge">★★</span><span class="freq f3">3×</span></h3>
+    <p>Industrial serial communication protocol by Modicon (1979). Used in SCADA, building automation, industrial IoT.</p>
     <h4>Key Features:</h4>
     <ul>
-      <li><b>Master-Slave Architecture</b> — Communication always initiated by master (HMI/SCADA); slaves (sensors, PLCs) only respond when queried</li>
+      <li><b>Master-Slave Architecture</b> — Communication always initiated by master (HMI/SCADA)</li>
       <li><b>Request-Response Protocol</b> — Every communication = one request + one response</li>
       <li><b>Open Standard</b> — Freely available, widely supported</li>
-      <li><b>Serial &amp; TCP/IP Support</b> — Runs over RS-232, RS-485 serial lines or Ethernet (Modbus TCP)</li>
-      <li><b>Transmission Modes</b> — Modbus RTU (binary, compact), Modbus ASCII (text), Modbus TCP (Ethernet)</li>
+      <li><b>Serial &amp; TCP/IP Support</b> — RS-232, RS-485 or Ethernet (Modbus TCP)</li>
+      <li><b>Transmission Modes</b> — Modbus RTU (binary), Modbus ASCII (text), Modbus TCP (Ethernet)</li>
       <li><b>Register-Based Data Model</b> — Coils (1-bit), Discrete inputs, Holding registers, Input registers</li>
-      <li><b>Applications</b> — SCADA, building automation, energy meters, industrial IoT gateways</li>
     </ul>
   </div>
 
   <div class="card">
-    <h3>Need for IP Optimization in IoT &amp; Next-Gen IP Protocols <span class="badge">★★</span></h3>
+    <h3>Need for IP Optimization &amp; Next-Gen IP Protocols <span class="badge">★★</span><span class="freq f2">2×</span></h3>
     <h4>Why IP Optimization is Needed:</h4>
     <ul>
       <li>IoT devices have very limited RAM and CPU — standard IP stacks too large</li>
@@ -303,7 +325,7 @@
       <tr><td><b>IPv6</b></td><td>Addressing for billions of IoT devices</td><td>128-bit, SLAAC, built-in IPSec</td></tr>
       <tr><td><b>6LoWPAN</b></td><td>IPv6 over 802.15.4</td><td>Header compression 40B→6B, fragmentation, mesh addressing</td></tr>
       <tr><td><b>RPL</b></td><td>Routing in lossy IoT mesh</td><td>DODAG, DIO/DAO/DIS, storing/non-storing modes</td></tr>
-      <tr><td><b>CoAP</b></td><td>Lightweight app protocol (RFC 7252)</td><td>REST-like (GET/PUT/POST/DELETE) over UDP; CON/NON messages</td></tr>
+      <tr><td><b>CoAP</b></td><td>Lightweight app protocol (RFC 7252)</td><td>REST-like (GET/PUT/POST/DELETE) over UDP</td></tr>
       <tr><td><b>MQTT</b></td><td>Pub-sub messaging over TCP</td><td>3 QoS levels; broker-based; AWS/Azure IoT</td></tr>
       <tr><td><b>DTLS</b></td><td>Security for UDP-based IoT</td><td>TLS-equivalent for CoAP; confidentiality + integrity + auth</td></tr>
     </table>
@@ -315,7 +337,7 @@
 <div id="m4" class="content">
 
   <div class="card">
-    <h3>Cloud Computing — Definition &amp; Paradigm <span class="badge yellow">★★★ Every Paper</span></h3>
+    <h3>Cloud Computing — Definition &amp; Paradigm <span class="badge yellow">★★★ Every Paper</span><span class="freq f2">2×</span></h3>
     <p><b>Definition:</b> Computing using Internet-based services delivered on a provider's infrastructure. Like electricity — user doesn't need to know the source.</p>
     <h4>Data Collection Methods (low → high scale):</h4>
     <ul>
@@ -328,19 +350,19 @@
   </div>
 
   <div class="card">
-    <h3>XaaS — Cloud Service Models <span class="badge yellow">★★★ Every Paper</span></h3>
+    <h3>XaaS — Cloud Service Models <span class="badge yellow">★★★ Every Paper</span><span class="freq f5">5×</span></h3>
     <p style="margin-bottom:6px;"><b>Formula: Cloud = SaaS + PaaS + IaaS + DaaS</b></p>
     <table>
       <tr><th>Model</th><th>What's Provided</th><th>User Controls</th><th>Examples</th></tr>
       <tr><td><b>SaaS</b> — Software as a Service</td><td>Software on demand, browser access</td><td>Nothing</td><td>Gmail, Google Drive, Office 365, Salesforce</td></tr>
-      <tr><td><b>PaaS</b> — Platform as a Service</td><td>Platform + middleware + DB + web server</td><td>Applications only</td><td>Google App Engine, Xively, Nimbits, Azure Beanstalk</td></tr>
+      <tr><td><b>PaaS</b> — Platform as a Service</td><td>Platform + middleware + DB + web server</td><td>Applications only</td><td>Google App Engine, Xively, Nimbits, Azure</td></tr>
       <tr><td><b>IaaS</b> — Infrastructure as a Service</td><td>Servers, storage, OS, data centers</td><td>Apps + OS + Data</td><td>AWS EC2, Microsoft Azure, Google Compute Engine</td></tr>
       <tr><td><b>DaaS</b> — Data/Desktop as a Service</td><td>Data warehouse or hosted virtual desktop</td><td>Data only</td><td>Apple iCloud, Tata 10X, Cisco DaaS</td></tr>
     </table>
   </div>
 
   <div class="card">
-    <h3>Cloud Deployment Models <span class="badge yellow">★★★</span></h3>
+    <h3>Cloud Deployment Models <span class="badge yellow">★★★</span><span class="freq f4">4×</span></h3>
     <table>
       <tr><th>Model</th><th>Who can use?</th><th>Key Feature</th><th>Examples</th></tr>
       <tr><td><b>Public</b></td><td>General public</td><td>Multi-tenant, pay-as-you-go, highly scalable</td><td>AWS, Azure, Google Cloud</td></tr>
@@ -351,14 +373,14 @@
   </div>
 
   <div class="card">
-    <h3>Virtualization in Cloud <span class="badge yellow">★★</span></h3>
+    <h3>Virtualization in Cloud <span class="badge yellow">★★</span><span class="freq f3">3×</span></h3>
     <p><b>Definition:</b> Enables applications to run in independent, isolated environments on shared physical hardware.</p>
     <h4>Types:</h4>
     <ul>
-      <li><b>Storage Virtualization</b> — Abstract interface hides multi-server storage. User sees one entity. eg: iCloud, Google Drive</li>
+      <li><b>Storage Virtualization</b> — Abstract interface hides multi-server storage. eg: iCloud, Google Drive</li>
       <li><b>Network Virtualization (NFV)</b> — Multiple networks appear as one; virtual routers, firewalls on commodity servers</li>
-      <li><b>Server Virtualization</b> — Multiple VMs on one physical server (hypervisors). Load balancing, isolation. eg: VMware, KVM</li>
-      <li><b>Desktop Virtualization</b> — Multiple virtual desktops via one OS. Remote access. eg: AWS WorkSpaces, Citrix</li>
+      <li><b>Server Virtualization</b> — Multiple VMs on one physical server (hypervisors). eg: VMware, KVM</li>
+      <li><b>Desktop Virtualization</b> — Multiple virtual desktops via one OS. eg: AWS WorkSpaces, Citrix</li>
     </ul>
     <h4>Cloud Features vs Concerns:</h4>
     <table>
@@ -373,8 +395,8 @@
   </div>
 
   <div class="card">
-    <h3>Xively Platform <span class="badge yellow">★★★ Every Paper</span></h3>
-    <p><b>Type:</b> PaaS | Formerly Cosm / Pachube | Now owned by Google | First public cloud for commercial IoT | Open-source for Arduino/RPi</p>
+    <h3>Xively Platform <span class="badge yellow">★★★ Every Paper</span><span class="freq f3">3×</span></h3>
+    <p><b>Type:</b> PaaS | Formerly Cosm / Pachube | Now owned by Google | First public cloud for commercial IoT</p>
     <h4>Key Concepts:</h4>
     <ul>
       <li><b>Data Stream</b> — Continuous sensed data flow over Internet from a sensor</li>
@@ -391,7 +413,7 @@
   </div>
 
   <div class="card">
-    <h3>Nimbits Platform <span class="badge yellow">★★★ Every Paper</span></h3>
+    <h3>Nimbits Platform <span class="badge yellow">★★★ Every Paper</span><span class="freq f1">1×</span></h3>
     <p><b>Type:</b> PaaS, open-source. Runs on Google App Engine <b>OR</b> Raspberry Pi (edge computing).</p>
     <h4>Architecture Components:</h4>
     <ul>
@@ -401,25 +423,24 @@
       <li><b>H2 Database</b> — Java SQL database for data storage</li>
       <li><b>Security Tokens</b> — Secure access to Nimbits cloud services</li>
     </ul>
-    <p><b>Features:</b> Edge computing locally, rule engine, data subscriptions, XMPP alerts, geo/time stamping, open-source Java (nimbits.io)</p>
-    <p><b>Languages:</b> Arduino, JavaScript, Java, Android</p>
+    <p><b>Features:</b> Edge computing locally, rule engine, data subscriptions, XMPP alerts, geo/time stamping, nimbits.io Java library</p>
   </div>
 
   <div class="card">
-    <h3>IoT Device Building Blocks &amp; Raspberry Pi <span class="badge yellow">★★★</span></h3>
+    <h3>IoT Device Building Blocks &amp; Raspberry Pi <span class="badge yellow">★★★</span><span class="freq f4">4×</span></h3>
     <h4>4 Building Blocks:</h4>
     <ul>
-      <li><b>Sensing (Sensors)</b> — Temperature, humidity, light, pressure. eg: DHT11, LDR, pressure sensors</li>
+      <li><b>Sensing (Sensors)</b> — Temperature, humidity, light, pressure. eg: DHT11, LDR</li>
       <li><b>Actuation (Actuators)</b> — Relay, servo motors, LEDs, buzzers, valves</li>
       <li><b>Communication Module</b> — Wi-Fi (802.11), BLE, ZigBee, LoRaWAN, NB-IoT, Cellular</li>
-      <li><b>Processing &amp; Analysis</b> — CPU/MCU, RAM, Flash, on-chip ADC/DAC, local storage (SD card)</li>
+      <li><b>Processing &amp; Analysis</b> — CPU/MCU, RAM, Flash, on-chip ADC/DAC, local storage</li>
     </ul>
     <h4>Raspberry Pi Hardware:</h4>
     <table>
       <tr><th>Component</th><th>Detail</th></tr>
       <tr><td><b>Processor</b></td><td>ARM-based Broadcom SoC (700 MHz ARM1176JZ-F on Model B Rev2)</td></tr>
-      <tr><td><b>RAM</b></td><td>512 MB SDRAM (Rev2); newer models have more</td></tr>
-      <tr><td><b>GPIO</b></td><td>40-pin header: True GPIO + I2C + SPI + UART (serial Rx/Tx) pins</td></tr>
+      <tr><td><b>RAM</b></td><td>512 MB SDRAM (Rev2)</td></tr>
+      <tr><td><b>GPIO</b></td><td>40-pin header: True GPIO + I2C + SPI + UART pins</td></tr>
       <tr><td><b>USB</b></td><td>4 ports × 100 mA each</td></tr>
       <tr><td><b>Video/Audio</b></td><td>HDMI + RCA composite (PAL/NTSC) + 3.5mm audio jack</td></tr>
       <tr><td><b>Storage</b></td><td>MicroSD slot — minimum 8 GB for OS image</td></tr>
@@ -429,17 +450,16 @@
   </div>
 
   <div class="card">
-    <h3>Raspberry Pi Interfaces — UART, SPI, I2C <span class="badge yellow">★★★ Every Paper</span></h3>
+    <h3>Raspberry Pi Interfaces — UART, SPI, I2C <span class="badge yellow">★★★ Every Paper</span><span class="freq f3">3×</span></h3>
     <table>
       <tr><th>Feature</th><th>UART (Serial)</th><th>SPI</th><th>I2C</th></tr>
       <tr><td><b>Also called</b></td><td>RS-232 / COM Port</td><td>Serial Peripheral Interface</td><td>Inter-Integrated Circuit Bus</td></tr>
       <tr><td><b>Wires</b></td><td>2 (TxD, RxD — <b>crossed</b>)</td><td>4 (MOSI, MISO, SCLK, SS)</td><td>2 (SDA, SCL) + pull-up resistors to VDD</td></tr>
-      <tr><td><b>Clock</b></td><td>Asynchronous — no clock (baud rate must match ±10%)</td><td>Synchronous — SCLK from master</td><td>Synchronous — SCL from master</td></tr>
+      <tr><td><b>Clock</b></td><td>Asynchronous — no clock</td><td>Synchronous — SCLK from master</td><td>Synchronous — SCL from master</td></tr>
       <tr><td><b>Duplex</b></td><td>Full-duplex</td><td>Full-duplex</td><td>Half-duplex</td></tr>
-      <tr><td><b>Speed</b></td><td>Up to 115,200 bps (default)</td><td>Up to 8 Mbps+</td><td>Up to 400 kbps (fast mode)</td></tr>
+      <tr><td><b>Speed</b></td><td>Up to 115,200 bps</td><td>Up to 8 Mbps+</td><td>Up to 400 kbps (fast mode)</td></tr>
       <tr><td><b>Masters/Slaves</b></td><td>1 master, 1 slave only</td><td>1 master, multiple slaves (1 SS pin each)</td><td>Multiple masters, multiple slaves</td></tr>
       <tr><td><b>Addressing</b></td><td>None (point-to-point)</td><td>Chip Select (SS) — active LOW</td><td>7-bit or 10-bit address per device</td></tr>
-      <tr><td><b>Packet</b></td><td>Start(1) + Data(8) + Stop(1/2)</td><td>No overhead; SS selects slave</td><td>Start + Addr(8) + ACK(1)</td></tr>
       <tr><td><b>Use Case</b></td><td>Debug/console, GPS, Bluetooth modules</td><td>ADC, displays, SD cards, fast sensors</td><td>IMU, RTC, OLED, barometer, multiple peripherals</td></tr>
     </table>
     <h4>SPI Signal Lines (remember MOSI/MISO):</h4>
@@ -447,7 +467,7 @@
   </div>
 
   <div class="card">
-    <h3>GPIO Programming — LED &amp; Push Button (Python) <span class="badge yellow">★★★ Every Paper</span></h3>
+    <h3>GPIO Programming — LED &amp; Push Button (Python) <span class="badge yellow">★★★ Every Paper</span><span class="freq f2">2×</span></h3>
     <div class="formula">import RPi.GPIO as GPIO
 import time
 
@@ -477,7 +497,7 @@ finally:
 <div id="m5" class="content">
 
   <div class="card">
-    <h3>Security vs Privacy <span class="badge yellow">★★★ Every Paper</span></h3>
+    <h3>Security vs Privacy <span class="badge yellow">★★★ Every Paper</span><span class="freq f3">3×</span></h3>
     <table>
       <tr><th>Aspect</th><th>Security</th><th>Privacy</th></tr>
       <tr><td><b>Definition</b></td><td>Protects systems &amp; data from unauthorized access/attacks</td><td>Protects personal/sensitive data from unrelated parties</td></tr>
@@ -488,7 +508,7 @@ finally:
   </div>
 
   <div class="card">
-    <h3>Message Integrity &amp; Non-Repudiation <span class="badge yellow">★★★</span></h3>
+    <h3>Message Integrity &amp; Non-Repudiation <span class="badge yellow">★★★</span><span class="freq f5">5×</span></h3>
     <p><b>Message Integrity:</b> Ensures data is unaltered during transmission/storage.</p>
     <h4>Hash/Digest Process:</h4>
     <ul>
@@ -498,12 +518,12 @@ finally:
       <li>Step 4: h1 = h0 → PASS (unchanged); h1 ≠ h0 → FAIL (tampered/corrupted)</li>
     </ul>
     <div class="formula">MD5 → 128-bit digest | SHA-256 → 256-bit digest | AES-128 MIC → used in 802.15.4 &amp; LoRaWAN</div>
-    <p><b>Non-Repudiation:</b> Digital signature certified by Trusted Third Party (TTP). Sender cannot later deny having sent the message.</p>
+    <p><b>Non-Repudiation:</b> Digital signature certified by Trusted Third Party (TTP). Sender cannot deny having sent the message.</p>
     <p style="margin-top:4px;color:#aaa;"><b>In LoRaWAN:</b> NwkSKey computes MIC at MAC layer; AppSKey secures the payload.</p>
   </div>
 
   <div class="card">
-    <h3>5 Functional Components of IoT Security <span class="badge yellow">★★★ Every Paper</span></h3>
+    <h3>5 Functional Components of IoT Security <span class="badge yellow">★★★ Every Paper</span><span class="freq f3">3×</span></h3>
     <table>
       <tr><th>FC</th><th>Name</th><th>Function</th></tr>
       <tr><td><b>FC1</b></td><td>Identity Management (IdM)</td><td>Manages device IDs, pseudo-names, group ID hierarchies, user IDs anonymously</td></tr>
@@ -516,7 +536,7 @@ finally:
   </div>
 
   <div class="card">
-    <h3>OWASP Top 10 IoT Vulnerabilities <span class="badge yellow">★★★ Every Paper</span></h3>
+    <h3>OWASP Top 10 IoT Vulnerabilities <span class="badge yellow">★★★ Every Paper</span><span class="freq f4">4×</span></h3>
     <table>
       <tr><th>#</th><th>Vulnerability</th><th>Key Risk / Attack</th></tr>
       <tr><td><b>1</b></td><td>Insecure Web Interface</td><td>Weak credentials, XSS, no account lockout on management interface</td></tr>
@@ -534,7 +554,7 @@ finally:
   </div>
 
   <div class="card">
-    <h3>Layered Attacker Model (OSI Layer Security) <span class="badge yellow">★★★ Every Paper</span></h3>
+    <h3>Layered Attacker Model (OSI Layer Security) <span class="badge yellow">★★★ Every Paper</span><span class="freq f3">3×</span></h3>
     <table>
       <tr><th>Layer</th><th>Possible Attacks</th><th>Countermeasures</th></tr>
       <tr><td><b>L1 Physical</b></td><td>Eavesdropping on wireless, signal jamming, device tampering, firmware extraction</td><td>AES-CCM 128-bit link-level encryption (ZigBee), tamper-evident sealing, restricted placement</td></tr>
@@ -547,7 +567,7 @@ finally:
   </div>
 
   <div class="card">
-    <h3>STRIDE Threat Analysis Model <span class="badge yellow">★★★</span></h3>
+    <h3>STRIDE Threat Analysis Model <span class="badge yellow">★★★</span><span class="freq f1">1×</span></h3>
     <p>Most widely used threat model. Process: Specify STRIDE → Build DFD → Identify elements → Activate analysis → Generate &amp; analyse threats</p>
     <table>
       <tr><th>Letter</th><th>Threat</th><th>Description</th><th>Countermeasure</th></tr>
@@ -561,7 +581,7 @@ finally:
   </div>
 
   <div class="card">
-    <h3>Security Tomography, Use Case &amp; Misuse Case <span class="badge">★★</span></h3>
+    <h3>Security Tomography, Use Case &amp; Misuse Case <span class="badge">★★</span><span class="freq f1">1×</span></h3>
     <p><b>Security Tomography:</b> Inspired by medical CT. Studies vulnerabilities across complex IoT systems (WSN, RFID). Identifies weaknesses, designs targeted countermeasures, allocates resources.</p>
     <p><b>Useful when:</b> Complex multi-layer deployments, energy-constrained WSN, real-time anomaly detection.</p>
     <table style="margin-top:6px;">
@@ -574,7 +594,7 @@ finally:
   </div>
 
   <div class="card">
-    <h3>4-Layer Smart City IoT Architecture <span class="badge yellow">★★★ Every Paper</span></h3>
+    <h3>4-Layer Smart City IoT Architecture <span class="badge yellow">★★★ Every Paper</span><span class="freq f5">5×</span></h3>
     <p><b>Data flows bottom-up:</b> Street → City Network → Data Center → Services</p>
     <table>
       <tr><th>Layer</th><th>Components</th><th>Key Points</th></tr>
@@ -587,11 +607,11 @@ finally:
   </div>
 
   <div class="card">
-    <h3>Smart City Security Architecture <span class="badge yellow">★★</span></h3>
+    <h3>Smart City Security Architecture <span class="badge yellow">★★</span><span class="freq f2">2×</span></h3>
     <table>
       <tr><th>Layer</th><th>Security Measures</th></tr>
       <tr><td><b>Street Layer</b></td><td>Unique device certificates, encryption at sensor level, TPM (tamper → self-destruct), user auth, data minimisation</td></tr>
-      <tr><td><b>City Network</b></td><td>IPsec/VPN firewall at edge, VLAN per service domain (parking, lighting, traffic), switch-to-switch encryption, RBAC for operators</td></tr>
+      <tr><td><b>City Network</b></td><td>IPsec/VPN firewall at edge, VLAN per service domain, switch-to-switch encryption, RBAC for operators</td></tr>
       <tr><td><b>Data Center</b></td><td>Secure VPCs, dynamic perimeters, mutual TLS (mTLS), OAuth 2.0 for device attestation, data encrypted at rest &amp; in motion</td></tr>
       <tr><td><b>Services Layer</b></td><td>RBAC dashboards, audit logging of all access, rate-limited authenticated APIs</td></tr>
     </table>
@@ -599,7 +619,7 @@ finally:
   </div>
 
   <div class="card">
-    <h3>Smart Street Lighting &amp; Air Pollution Monitoring <span class="badge yellow">★★★ Every Paper</span></h3>
+    <h3>Smart Street Lighting &amp; Air Pollution Monitoring <span class="badge yellow">★★★ Every Paper</span><span class="freq f4">4×</span></h3>
     <h4>Smart Street Lighting:</h4>
     <ul>
       <li><b>Why LED?</b> Less energy, longer lifespan, adjustable colour/intensity, instant digital response</li>
@@ -607,7 +627,7 @@ finally:
       <li><b>Protocols:</b> ZigBee, Wi-Fi, 802.15.4g (Wi-SUN), LoRaWAN, Cellular</li>
       <li><b>Bonus on lamp post:</b> Air quality sensors, traffic cameras, public Wi-Fi — sharing existing infrastructure</li>
     </ul>
-    <h4>Air Pollution Monitoring:</h4>
+    <h4>Air Pollution Monitoring: <span class="freq f2">2×</span></h4>
     <ul>
       <li><b>Problem:</b> Traditional fixed stations have very limited coverage — hyper-local blind spots city-wide</li>
       <li><b>Sensors:</b> Gas (CO, NO₂, O₃, SO₂) + PM (PM2.5, PM10) + Temp/Humidity; on lamp posts, buses, buildings</li>
@@ -617,7 +637,7 @@ finally:
   </div>
 
   <div class="card">
-    <h3>Smart Parking, Traffic &amp; IoT City Verticals <span class="badge yellow">★★</span></h3>
+    <h3>Smart Parking, Traffic &amp; IoT City Verticals <span class="badge yellow">★★</span><span class="freq f2">2×</span></h3>
     <h4>Smart Parking sensors:</h4>
     <p>In-ground magnetic (metal detection) | Video-based | Radar (volumetric). Users: Citizens (find space), Wardens (violations), Municipalities (demand pricing)</p>
     <h4>Smart Traffic sensors:</h4>
@@ -638,79 +658,116 @@ finally:
 
 </div>
 
-<!-- ===== HOT QUESTIONS ===== -->
+<!-- ===== HOT QUESTIONS + REPEAT MAP ===== -->
 <div id="hotq" class="content">
 
-  <div class="section-title">🔴 GUARANTEED — appeared in 3+ papers</div>
+  <!-- FULL REPEAT MAP TABLE -->
+  <div class="section-title">📊 COMPLETE REPEAT FREQUENCY MAP — All Modules</div>
+  <div class="card">
+    <table>
+      <tr><th>Module</th><th>Topic</th><th>Repeats</th><th>Priority</th></tr>
+      <tr><td>M3</td><td>IEEE 802.15.4 PHY + MAC + Security (frame formats)</td><td>5×</td><td><span class="freq f5">MUST KNOW</span></td></tr>
+      <tr><td>M3</td><td>LoRaWAN architecture + PHY layer + MAC layer</td><td>5×</td><td><span class="freq f5">MUST KNOW</span></td></tr>
+      <tr><td>M5</td><td>Message integrity — definition and how it is checked</td><td>5×</td><td><span class="freq f5">MUST KNOW</span></td></tr>
+      <tr><td>M5</td><td>4-layer smart city architecture (with diagram)</td><td>5×</td><td><span class="freq f5">MUST KNOW</span></td></tr>
+      <tr><td>M4</td><td>Cloud service models — SaaS, PaaS, IaaS, DaaS (XaaS)</td><td>5×</td><td><span class="freq f5">MUST KNOW</span></td></tr>
+      <tr><td>M3</td><td>IEEE 802.15.4e vs 802.15.4g modifications</td><td>4×</td><td><span class="freq f4">VERY HIGH</span></td></tr>
+      <tr><td>M3</td><td>ZigBee protocol / stack architecture</td><td>4×</td><td><span class="freq f4">VERY HIGH</span></td></tr>
+      <tr><td>M3</td><td>LTE-M vs NB-IoT differences (full comparison table)</td><td>4×</td><td><span class="freq f4">VERY HIGH</span></td></tr>
+      <tr><td>M4</td><td>Raspberry Pi features + components</td><td>4×</td><td><span class="freq f4">VERY HIGH</span></td></tr>
+      <tr><td>M4</td><td>IoT device basic building blocks (with diagram)</td><td>4×</td><td><span class="freq f4">VERY HIGH</span></td></tr>
+      <tr><td>M4</td><td>Cloud deployment models (Public/Private/Community/Hybrid)</td><td>4×</td><td><span class="freq f4">VERY HIGH</span></td></tr>
+      <tr><td>M5</td><td>OWASP Top 10 IoT vulnerabilities</td><td>4×</td><td><span class="freq f4">VERY HIGH</span></td></tr>
+      <tr><td>M5</td><td>Smart street lighting architecture in cities</td><td>4×</td><td><span class="freq f4">VERY HIGH</span></td></tr>
+      <tr><td>M3</td><td>Features of RPL</td><td>3×</td><td><span class="freq f3">HIGH</span></td></tr>
+      <tr><td>M3</td><td>6LoWPAN adaptation layer (significance / overview)</td><td>3×</td><td><span class="freq f3">HIGH</span></td></tr>
+      <tr><td>M3</td><td>NB-IoT network layer + deployment modes</td><td>3×</td><td><span class="freq f3">HIGH</span></td></tr>
+      <tr><td>M3</td><td>Features of Modbus</td><td>3×</td><td><span class="freq f3">HIGH</span></td></tr>
+      <tr><td>M4</td><td>Raspberry Pi interfaces — UART, SPI, I2C</td><td>3×</td><td><span class="freq f3">HIGH</span></td></tr>
+      <tr><td>M4</td><td>Xively cloud platform — data collection + concepts</td><td>3×</td><td><span class="freq f3">HIGH</span></td></tr>
+      <tr><td>M4</td><td>Virtualization in cloud (types + features + concerns)</td><td>3×</td><td><span class="freq f3">HIGH</span></td></tr>
+      <tr><td>M5</td><td>Security vs privacy + 5 functional units (FCs)</td><td>3×</td><td><span class="freq f3">HIGH</span></td></tr>
+      <tr><td>M5</td><td>Layered attacker model + attacks per OSI layer</td><td>3×</td><td><span class="freq f3">HIGH</span></td></tr>
+      <tr><td>M3</td><td>Next-gen IP-based protocols (6LoWPAN/RPL/CoAP/MQTT)</td><td>2×</td><td><span class="freq f2">MEDIUM</span></td></tr>
+      <tr><td>M3</td><td>RPL routing solution for IP smart objects</td><td>2×</td><td><span class="freq f2">MEDIUM</span></td></tr>
+      <tr><td>M4</td><td>GPIO LED + button Python code (GPIO 20 + 21)</td><td>2×</td><td><span class="freq f2">MEDIUM</span></td></tr>
+      <tr><td>M4</td><td>Cloud computing paradigm for IoT data</td><td>2×</td><td><span class="freq f2">MEDIUM</span></td></tr>
+      <tr><td>M5</td><td>Air pollution monitoring system (IoT, with diagram)</td><td>2×</td><td><span class="freq f2">MEDIUM</span></td></tr>
+      <tr><td>M5</td><td>Smart city security architecture (per-layer)</td><td>2×</td><td><span class="freq f2">MEDIUM</span></td></tr>
+      <tr><td>M5</td><td>Smart city use cases — parking + traffic</td><td>2×</td><td><span class="freq f2">MEDIUM</span></td></tr>
+      <tr><td>M5</td><td>Security function group in IoT reference architecture</td><td>2×</td><td><span class="freq f2">MEDIUM</span></td></tr>
+      <tr><td>M3</td><td>LoRaWAN standardization and alliances</td><td>1×</td><td><span class="freq f1">LOW</span></td></tr>
+      <tr><td>M4</td><td>Nimbits platform</td><td>1×</td><td><span class="freq f1">LOW</span></td></tr>
+      <tr><td>M4</td><td>SPI + I2C sensor interfacing on Raspberry Pi</td><td>1×</td><td><span class="freq f1">LOW</span></td></tr>
+      <tr><td>M5</td><td>IoT strategy for smarter cities</td><td>1×</td><td><span class="freq f1">LOW</span></td></tr>
+      <tr><td>M5</td><td>Use case vs misuse case</td><td>1×</td><td><span class="freq f1">LOW</span></td></tr>
+      <tr><td>M5</td><td>STRIDE threat analysis model</td><td>1×</td><td><span class="freq f1">LOW</span></td></tr>
+      <tr><td>M5</td><td>Security tomography</td><td>1×</td><td><span class="freq f1">LOW</span></td></tr>
+    </table>
+  </div>
+
+  <div class="section-title" style="margin-top:16px;">🔴 GUARANTEED — appeared 5× (every paper)</div>
 
   <div class="card">
-    <h3>M3: IEEE 802.15.4 PHY + MAC + Security <span class="badge red">★★★</span></h3>
+    <h3>M3: IEEE 802.15.4 PHY + MAC + Security <span class="freq f5">5×</span></h3>
     <p>PHY: 2.4GHz/250kbps, 868MHz/20kbps, 915MHz/40kbps. Modulation: BPSK (DSSS), OQPSK, ASK (PSSS). Frame: Preamble(4B)+SFD(1B)+PHR(1B)+Payload(0-127B)+FCS(2B). MAC: CSMA-CA, 4 frame types (Data/Beacon/ACK/Command). Frame: FrameCtrl(2B)+SeqNo(1B)+Addr(var)+Payload+FCS(2B). Security: AES-128, MIC computed over entire frame, AES-CCM* modes, Auxiliary Security Header (SecurityCtrl+FrameCounter+KeyID).</p>
+    <div class="pbar-wrap"><div class="pbar" style="width:100%;background:#c0392b"></div></div>
   </div>
 
   <div class="card">
-    <h3>M3: IEEE 802.15.4e vs 802.15.4g <span class="badge red">★★★</span></h3>
-    <p>802.15.4e = MAC layer amendment. TSCH (TDMA+FDMA, time slots, channel hopping), IEs (Header+Payload), Enhanced Beacons, Enhanced ACK. Target: factory automation, smart grid. Payload still 127 bytes. 802.15.4g = PHY layer amendment. New PHYs: MR-FSK/MR-OFDM/MR-OQPSK. Payload increased to 2047 bytes. Frequency 169MHz–2.4GHz. Target: smart utility networks, smart grid outdoor.</p>
-  </div>
-
-  <div class="card">
-    <h3>M3: ZigBee Stack Architecture <span class="badge red">★★★</span></h3>
-    <p>Stack (top-down): APL (Application Layer + ZDO) → APS (binding, group mgmt) → NWK (AODV routing, AES-128 security) → 802.15.4 MAC → 802.15.4 PHY. Device types: Coordinator (ZC, 1 per network, forms PAN), Router (ZR, FFD, extends coverage), End Device (ZED, RFD, low power, talks only to parent). Features: 65000 nodes, AES-128 dual-layer security, self-healing mesh, AODV on-demand routing, topologies: Star/Tree/Mesh.</p>
-  </div>
-
-  <div class="card">
-    <h3>M3: LoRaWAN Architecture + PHY + MAC <span class="badge red">★★★</span></h3>
+    <h3>M3: LoRaWAN Architecture + PHY + MAC <span class="freq f5">5×</span></h3>
     <p>Architecture: End Devices → LoRa Gateways (multi-channel transparent bridge) → Network Server (dedup, ADR, MAC cmds) → Application Server. Star-of-Stars topology. PHY: CSS (Chirp Spread Spectrum), SF7–SF12 (higher SF = longer range, lower rate). SF12=250bps, SF7=5470bps. Sub-GHz unlicensed bands. Device classes: A (2 RX windows after uplink, lowest power), B (scheduled via beacon), C (always listening, mains-powered). Security: NwkSKey (MAC/MIC) + AppSKey (payload encryption). DevAddr=32-bit (NwkID 7bits + NwkAddr 25bits).</p>
+    <div class="pbar-wrap"><div class="pbar" style="width:100%;background:#c0392b"></div></div>
   </div>
 
   <div class="card">
-    <h3>M3: LTE-M vs NB-IoT <span class="badge red">★★★</span></h3>
-    <p>Both 3GPP Release 13. LTE-M: 1.4MHz BW, 200kbps, voice support (VoLTE), full mobility, in-band LTE only, +15dB coverage, ~10yr battery. NB-IoT: 200kHz BW, 60kbps UL/30kbps DL, no voice, limited mobility, 3 deployment modes (Standalone/In-band/Guard Band), +20dB vs GPRS, &gt;10yr battery. Both support PSM + eDRX. NB-IoT standalone mode reuses GSM 200kHz channel — ideal for 2G migration.</p>
+    <h3>M5: Message Integrity <span class="freq f5">5×</span></h3>
+    <p>h0 = Hash(M0, K) at sender → transmitted with message → receiver computes h1 = Hash(M1, K) → h1==h0 PASS else FAIL. Algorithms: MD5 (128-bit), SHA-256 (256-bit). In 802.15.4/LoRaWAN: AES-128 MIC. Non-repudiation: digital signature certified by TTP → sender cannot deny.</p>
+    <div class="pbar-wrap"><div class="pbar" style="width:100%;background:#c0392b"></div></div>
   </div>
 
   <div class="card">
-    <h3>M3: 6LoWPAN Adaptation Layer <span class="badge red">★★★</span></h3>
-    <p>IPv6 over 802.15.4 (IETF RFC 4944, 6282). Problem: IPv6 MTU=1280B, 802.15.4 max=127B; IPv6 header=40B+UDP=8B. Three functions: (1) Header Compression (IPHC): compresses to 6 bytes — elides version, traffic class, flow label, addresses from MAC context. (2) Fragmentation: Datagram Size(11b)+Tag(16b)+Offset(8b); FRAG1 (no offset) then FRAGN (with offset). (3) Mesh Addressing: Layer-2 multi-hop via Hop Limit+Src+Dst MAC fields. Dispatch byte indicates active caps.</p>
+    <h3>M5: 4-Layer Smart City Architecture <span class="freq f5">5×</span></h3>
+    <p>L1 Street: sensors (parking/air/cameras) + ZigBee/LoRaWAN gateways → L2 City Network: routers + REP (≥2 paths to DC) → L3 Data Center: cloud + fog edge processing → L4 Services: city apps + citizen apps + APIs. REP = Resilient Ethernet Protocol. Fog = real-time edge decisions. Cross-domain: humidity data adjusts street light intensity.</p>
+    <div class="pbar-wrap"><div class="pbar" style="width:100%;background:#c0392b"></div></div>
   </div>
 
   <div class="card">
-    <h3>M3: RPL Routing Protocol <span class="badge red">★★★</span></h3>
-    <p>RFC 6550. IPv6 distance-vector for Low Power Lossy Networks (LLNs). Builds DODAG (Destination-Oriented DAG) rooted at border router. Messages: DIO (downward from root → build upward routes), DAO (upward → build downward routes), DIS (new node requests DIO). Rank = distance from root, prevents loops. Two modes: Storing (all nodes keep routing table, memory-heavy) vs Non-Storing (only border router, memory-efficient, source-routed). Metrics: ETX, Hop Count, Latency, LQL, Node Energy, Throughput, Link Color.</p>
+    <h3>M4: XaaS Cloud Service Models <span class="freq f5">5×</span></h3>
+    <p>SaaS: software on demand (Gmail, Drive) — user controls nothing. PaaS: platform for devs (App Engine, Xively, Nimbits, Azure) — user controls applications. IaaS: infra on rent (AWS, Azure, GCE) — user controls apps+OS+data. DaaS: data warehouse/virtual desktop (iCloud, Tata 10X) — user controls data. Provider manages everything below each model's control line.</p>
+    <div class="pbar-wrap"><div class="pbar" style="width:100%;background:#c0392b"></div></div>
   </div>
 
-  <div class="card">
-    <h3>M4: Xively + Nimbits Platforms <span class="badge red">★★★</span></h3>
-    <p>Xively: PaaS (formerly Cosm/Pachube, now Google). First public cloud for IoT. 4 concepts: Data Stream (continuous flow), Data Points (individual values), Triggers (actions on state change), Feed (set of streams/alerts). Pull=auto HTTP server; Push=manual HTTP client. Protocols: REST/MQTT/WebSockets. Formats: JSON/XML/CSV. Nimbits: PaaS, open-source. Runs on Google App Engine OR RPi. Components: NimbitsServerL (calculation objects), XMPPServerL (alerts), XMPP protocol, H2 Database, Security Tokens. Edge computing, rule engine, XMPP alerts, nimbits.io Java library.</p>
-  </div>
+  <div class="section-title" style="margin-top:16px;">🟠 VERY HIGH — appeared 4×</div>
 
   <div class="card">
-    <h3>M4: Raspberry Pi + UART/SPI/I2C <span class="badge red">★★★ Every Paper</span></h3>
-    <p>RPi: ARM Broadcom SoC (700MHz, 512MB SDRAM Rev2), 40-pin GPIO, USB×4, HDMI+RCA, MicroSD (min 8GB). UART=2-wire (TX-RX crossed), async, 115200bps, full-duplex, 1:1. SPI=4-wire (MOSI/MISO/SCLK/SS), sync, full-duplex, 8Mbps+, one SS per slave. I2C=2-wire (SDA/SCL+pull-ups), sync, half-duplex, 400kbps, unique 7/10-bit address, multi-device same bus. Memory hook: UART=simple/slow/1:1; SPI=fast/more wires/no address; I2C=2-wire/addressable/multi-device.</p>
-  </div>
-
-  <div class="card">
-    <h3>M4: GPIO LED + Button Code <span class="badge red">★★★ Every Paper</span></h3>
-    <p>GPIO.setmode(GPIO.BCM) → setup(20, OUT) → setup(21, IN, PUD_UP). If GPIO.input(21)==False: button pressed (active LOW), output(20, HIGH) = LED ON. Else output(20, LOW) = LED OFF. LED: GPIO20 → 330Ω → LED(+) → LED(−) → GND. Button: GPIO21 ↔ pushbutton ↔ GND. Run: sudo python led.py. Always GPIO.cleanup() in finally block. BCM = Broadcom numbering; BOARD = physical pin numbering.</p>
-  </div>
-
-  <div class="card">
-    <h3>M5: 5 FCs of IoT Security + OWASP Top 10 <span class="badge red">★★★ Every Paper</span></h3>
-    <p>FC1=Identity Mgmt (IdM), FC2=Authentication (MD5/SHA hash, certs — only hash transmitted), FC3=Authorisation (ACL=coarse/RBAC=role-based/ABAC=attribute-finest), FC4=Key Mgmt (gen/distrib/store/revoke), FC5=Trust &amp; Reputation (dynamic trust scores). OWASP Top 10: (1)Insecure Web Interface (2)Insufficient Auth (3)Insecure Network Services (4)No Transport Encryption (5)Privacy Concerns (6)Insecure Cloud Interface (7)Insecure Mobile Interface (8)No Security Configurability (9)Insecure Firmware (10)Poor Physical Security.</p>
-  </div>
-
-  <div class="card">
-    <h3>M5: Layered Attacker Model + Smart City Architecture <span class="badge red">★★★ Every Paper</span></h3>
-    <p>L1 Physical: eavesdrop/jam/tamper → AES-CCM 128. L2 Data Link: MAC spoof/ARP poison/VLAN hop → ARP inspection, port security. L3 Network: IP spoof/RPL DIO forging/sinkhole → firewall L3-L4, packet filter. L4 Transport: port scan/SYN flood → DTLS, SASL. L5/6 App: XSS/SQLi/MITM → HTTPS/S-HTTP, secure coding. CISCO: RBAC all layers, anti-tamper L1–4. 4-Layer City: L1 Street (sensors/gateways) → L2 City Network (routers/REP) → L3 Data Center (cloud/fog) → L4 Services (apps/APIs). REP=≥2 paths. Fog=edge real-time decisions.</p>
-  </div>
-
-  <div class="section-title" style="margin-top:16px;">🟠 VERY LIKELY — appeared in 2 papers</div>
-
-  <div class="card">
-    <h3>Quick-fire List</h3>
+    <h3>Quick-fire 4× answers</h3>
     <ul>
-      <li><b>M3:</b> Modbus features (master-slave, RTU/ASCII/TCP, register-based data model), Need for IP optimization in IoT (limited memory/CPU, 127B vs 1280B MTU, lossy links), Next-gen IP protocols table (IPv6/6LoWPAN/RPL/CoAP/MQTT/DTLS), LoRaWAN standardization &amp; LoRa Alliance (founded 2015, 500+ members, certification programs, LoRaWAN 1.0/1.0.2/1.1)</li>
-      <li><b>M4:</b> Cloud deployment models (Public/Private/Community/Hybrid), Virtualization types (Storage/NFV/Server/Desktop) with usages, Cloud features &amp; concerns table, IoT device building blocks, XaaS formula + comparison table</li>
-      <li><b>M5:</b> Message Integrity hash process steps, STRIDE model (all 6 with counters), Security Tomography + use/misuse case comparison, Smart City Security per layer, Smart Street Lighting architecture + features, Air Pollution Monitoring flow, IoT Strategy 7 verticals table, Smart Parking sensors &amp; users</li>
+      <li><b>802.15.4e vs 802.15.4g:</b> e=MAC only (TSCH+IEs+EBs+E-ACK, factory/smart grid, 127B) | g=PHY only (MR-FSK/OFDM/OQPSK, smart utility, 2047B, 169MHz–2.4GHz)</li>
+      <li><b>ZigBee stack:</b> APL→APS→NWK→802.15.4 MAC→PHY. Devices: ZC (1/network, coordinator), ZR (FFD, router), ZED (RFD, low-power end device). AODV on-demand routing. AES-128 dual-layer. 65000 nodes.</li>
+      <li><b>LTE-M vs NB-IoT:</b> LTE-M = 1.4MHz, 200kbps, voice, full mobility, in-band only, +15dB. NB-IoT = 200kHz, 60/30kbps, no voice, limited mobility, 3 modes (Standalone/In-band/Guard Band), +20dB vs GPRS.</li>
+      <li><b>Cloud deployment:</b> Public (AWS — multi-tenant, pay-as-you-go), Private (VMware — single org, full control), Community (hospital consortiums — shared concerns), Hybrid (AWS+VMware — mix of 2+, portable data)</li>
+      <li><b>OWASP Top 10 order:</b> Web Interface, Auth, Network Services, Transport Encryption, Privacy, Cloud Interface, Mobile Interface, Security Configurability, Firmware, Physical Security</li>
+      <li><b>Smart Street Lighting:</b> LED (energy/lifespan) → Cloud app (schedule/dim/alerts) → City network/gateway → Lighting node (LED+controller+light sensor). Protocols: ZigBee/Wi-Fi/802.15.4g/LoRaWAN/Cellular. Lamp post bonus: air sensors, cameras, public WiFi.</li>
+      <li><b>IoT Device building blocks:</b> Sensing (DHT11, LDR) + Actuation (relay, motor) + Communication (WiFi/BLE/ZigBee/LoRa) + Processing (CPU/MCU/RAM/Flash/ADC)</li>
+      <li><b>RPi features:</b> ARM Broadcom SoC, 40-pin GPIO, 512MB SDRAM, 4×USB, HDMI, RCA, MicroSD(min 8GB), CSI, DSI. OS: Raspbian, Ubuntu, Pidora, RaspBMC.</li>
+    </ul>
+  </div>
+
+  <div class="section-title" style="margin-top:16px;">🟡 HIGH — appeared 3×</div>
+
+  <div class="card">
+    <h3>Quick-fire 3× answers</h3>
+    <ul>
+      <li><b>RPL:</b> RFC 6550. DODAG rooted at border router. DIO (root downward → upward routes), DAO (upward → downward routes), DIS (new node → request DIO). Rank prevents loops. Storing (all nodes keep table) vs Non-Storing (only border router, source-routed).</li>
+      <li><b>6LoWPAN:</b> IPv6 over 802.15.4 (RFC 4944/6282). Three functions: (1) IPHC compression (40B+8B → 6B), (2) Fragmentation (FRAG1 + FRAGN, fields: Size 11b + Tag 16b + Offset 8b), (3) Mesh addressing (Hop Limit + Src/Dst MAC). Dispatch byte signals active capability.</li>
+      <li><b>NB-IoT network layer:</b> OFDMA DL (15kHz sub-carrier), SC-FDMA UL (15/3.75kHz), 200kHz BW, half-duplex FDD, 60/30kbps, +20dB vs GPRS, PSM+eDRX. 3 modes: Standalone (GSM 200kHz), In-band (inside LTE PRB), Guard Band (between LTE/WCDMA).</li>
+      <li><b>Modbus:</b> 1979, Modicon. Master-slave. Request-Response. RTU (binary) / ASCII (text) / TCP (Ethernet). RS-232/RS-485 or Ethernet. Register model: Coils(1-bit), Discrete inputs, Holding registers, Input registers.</li>
+      <li><b>UART/SPI/I2C:</b> UART=2-wire (TX-RX crossed), async, 115200bps, full-duplex, 1:1. SPI=4-wire (MOSI/MISO/SCLK/SS), sync, full-duplex, 8Mbps+, one SS per slave. I2C=2-wire (SDA/SCL+pullups), sync, half-duplex, 400kbps, unique 7/10-bit address, multi-device same bus.</li>
+      <li><b>Xively:</b> PaaS (formerly Cosm/Pachube, Google). 4 concepts: Data Stream + Data Points + Triggers + Feed. Pull=auto HTTP server; Push=manual HTTP client. REST/MQTT/WebSockets. JSON/XML/CSV.</li>
+      <li><b>Virtualization types:</b> Storage (abstract interface hides multi-server, eg iCloud), Network/NFV (virtual routers/firewalls on commodity hw), Server (multiple VMs on 1 server, hypervisor, eg VMware/KVM), Desktop (remote virtual desktops, eg Citrix).</li>
+      <li><b>5 FCs of security:</b> FC1=IdM, FC2=Authentication (MD5/SHA hash, only hash transmitted), FC3=Authorisation (ACL/RBAC/ABAC), FC4=Key Mgmt (gen/distrib/store/revoke), FC5=Trust &amp; Reputation (dynamic trust scores).</li>
+      <li><b>Layered attacker:</b> L1=Eavesdrop/Jam/Tamper→AES-CCM 128. L2=MAC spoof/ARP poison→ARP inspection. L3=IP spoof/RPL DIO forge→firewall L3-L4. L4=Port scan/SYN flood→DTLS. L5/6=XSS/SQLi→HTTPS/S-HTTP. CISCO: RBAC all layers.</li>
     </ul>
   </div>
 
@@ -720,12 +777,12 @@ finally:
     <h3>Do this, in this order</h3>
     <ul>
       <li><b>Now → +40 min:</b> Module 3 core — IEEE 802.15.4 PHY frame + MAC frame + security (AES-CCM*, MIC), 802.15.4e (TSCH) vs 802.15.4g (MR-FSK/OFDM/OQPSK, 2047B payload), ZigBee stack (5 layers, 3 device types, AODV)</li>
-      <li><b>+40 min → +80 min:</b> Module 3 protocols — LoRaWAN (star-of-stars, CSS/SF7-12, Class A/B/C, NwkSKey+AppSKey), LTE-M vs NB-IoT full comparison + 3 NB-IoT deployment modes, 6LoWPAN (3 functions: compression/fragmentation/mesh), RPL (DODAG, DIO/DAO/DIS, storing vs non-storing)</li>
-      <li><b>+80 min → +110 min:</b> Module 5 Security — 5 FCs, OWASP Top 10 (memorise order), Layered Attacker Model (L1–L5 attacks + counters), STRIDE table, Message Integrity steps</li>
-      <li><b>+110 min → +140 min:</b> Module 5 Smart Cities — 4-layer architecture, Smart Lighting architecture, Air Pollution monitoring flow, Smart City Security per layer, IoT verticals table</li>
-      <li><b>+140 min → +160 min:</b> Module 4 — XaaS table (SaaS/PaaS/IaaS/DaaS), Xively (4 concepts + pull/push), Nimbits (5 components), RPi UART/SPI/I2C comparison, GPIO Python code</li>
-      <li><b>Final 15 min:</b> Read the 🔥 HOT Q's tab top to bottom — just the bold summary lines</li>
-      <li><b>Then:</b> SLEEP. Re-read HOT Q's tab tomorrow morning before entering the hall.</li>
+      <li><b>+40 → +80 min:</b> Module 3 protocols — LoRaWAN (star-of-stars, CSS/SF7-12, Class A/B/C, NwkSKey+AppSKey), LTE-M vs NB-IoT + 3 deployment modes, 6LoWPAN (3 functions), RPL (DODAG, DIO/DAO/DIS, storing vs non-storing)</li>
+      <li><b>+80 → +110 min:</b> Module 5 Security — 5 FCs, OWASP Top 10 (memorise order), Layered Attacker Model (L1–L5 attacks + counters), STRIDE table, Message Integrity steps</li>
+      <li><b>+110 → +140 min:</b> Module 5 Smart Cities — 4-layer architecture, Smart Lighting architecture, Air Pollution monitoring flow, Smart City Security per layer, IoT verticals table</li>
+      <li><b>+140 → +160 min:</b> Module 4 — XaaS table (SaaS/PaaS/IaaS/DaaS), Xively (4 concepts + pull/push), Nimbits (5 components), RPi UART/SPI/I2C comparison, GPIO Python code</li>
+      <li><b>Final 15 min:</b> Read the 📊 Repeat Frequency Map + 🔴 Guaranteed section — just the bold summary lines</li>
+      <li><b>Then:</b> SLEEP. Re-read this HOT Q's tab top to bottom tomorrow morning before entering the hall.</li>
     </ul>
   </div>
 
