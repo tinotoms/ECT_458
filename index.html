@@ -1058,11 +1058,280 @@ Layer 1 PHY/DATA-LINK| MAC flooding, ARP poisoning, wireless jamming, DHCP starv
 
   <div class="card">
     <h3>IoT Strategy for Smarter Cities <span class="badge">★★ ×2</span></h3>
+    <p><b>Definition:</b> A vertical IoT strategy designs a complete end-to-end stack for each city domain (parking, lighting, traffic) rather than a single horizontal platform. Each vertical integrates devices → connectivity → platform → application.</p>
+    <h4>Vertical Integration Concept:</h4>
+    <ul>
+      <li>Each vertical (parking, lighting, traffic, environment) has its own sensor types, data rates, and response requirements</li>
+      <li>Cross-vertical integration at the data center layer enables city-wide intelligence and optimization</li>
+      <li>Avoids vendor lock-in by using open standards at each layer</li>
+    </ul>
     <h4>3 Key Strategies:</h4>
     <ul>
-      <li><b>Connectivity:</b> LPWAN (LoRaWAN, NB-IoT) for battery sensors; WiFi/5G for cameras; Cellular for mobile; multi-tech right-protocol-per-usecase</li>
-      <li><b>Data:</b> Real-time streaming (Kafka/Flink) for critical; Historical batch for planning; Data lake for AI/ML training; Open data APIs; data governance policies</li>
-      <li><b>Security:</b> E2E encryption TLS/DTLS; X.509 identity per device; network segmentation (separate VLANs per city domain); security at all 4 layers; SIEM for continuous monitoring</li>
+      <li><b>Connectivity:</b> LPWAN (LoRaWAN, NB-IoT, Sigfox) for battery-powered low-data-rate sensors (years of battery life); WiFi/5G for high-bandwidth applications (cameras); Cellular for mobile assets (fleet, drones); Gateway aggregation reduces backhaul connections</li>
+      <li><b>Data:</b> Real-time streaming (Apache Kafka, Flink) for time-critical responses (adaptive signals, emergency alerts); Historical/batch analytics for planning and predictive maintenance; Data lake stores raw data indefinitely for AI/ML; Open data APIs for third-party developers; Data governance: clear ownership, access, retention, anonymization policies</li>
+      <li><b>Security:</b> E2E encryption TLS/DTLS device to cloud — no unencrypted data at any layer; X.509 cert / shared key per device (unique cryptographic identity); Network segmentation — separate VLANs per city domain, no lateral movement; Security controls at all 4 layers (physical tamper-proof, firewalls, cloud IAM, WAF); SIEM integration for continuous anomaly detection</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>IoT Security — Vulnerabilities, Threats & Attacks <span class="badge yellow">★★★ ×3 | 8–9 Marks</span></h3>
+    <p><b>Security:</b> Protecting system integrity through authentication, access control, and data protection. <b>Privacy:</b> Ensuring messages/data do not reach unauthorized entities; users control their own data.</p>
+    <h4>Vulnerability Types:</h4>
+    <ul>
+      <li>A vulnerability is a weak point allowing unauthorized access or exploitation of the IoT system</li>
+      <li>IoT networks are inherently vulnerable to eavesdropping due to wireless transmission</li>
+      <li>Secret key encryption can be cracked by brute force with enough computing power</li>
+      <li>Each IoT element faces different vulnerabilities depending on its architectural position</li>
+    </ul>
+    <h4>Threat Types (5):</h4>
+    <table>
+      <tr><th>Threat</th><th>Description</th></tr>
+      <tr><td><b>Eavesdropping</b></td><td>Passive interception of wireless traffic to capture sensitive data</td></tr>
+      <tr><td><b>Fake Server</b></td><td>Attacker impersonates legitimate server to receive device data or issue false commands</td></tr>
+      <tr><td><b>Fake Device</b></td><td>Rogue IoT device joins network to inject false data or intercept communications</td></tr>
+      <tr><td><b>Data Interception</b></td><td>Active MITM attack to read or modify data in transit</td></tr>
+      <tr><td><b>Replay Attack</b></td><td>Captured valid messages re-sent to fool system into unauthorized actions</td></tr>
+    </table>
+    <h4>Layered Vulnerabilities:</h4>
+    <table>
+      <tr><th>Layer</th><th>Vulnerabilities</th></tr>
+      <tr><td>Device</td><td>Insecure firmware, hardcoded passwords, no secure boot</td></tr>
+      <tr><td>Network</td><td>Packet sniffing, DoS attacks, ARP spoofing</td></tr>
+      <tr><td>Cloud</td><td>Insecure APIs, data leakage, broken access control</td></tr>
+      <tr><td>Application</td><td>SQL injection, XSS, input validation failures</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Security Function Group — 5 Functional Components <span class="badge yellow">★ ×1 | 9 Marks</span></h3>
+    <p><b>Definition:</b> A set of 5 functional components (FCs) in the IoT reference architecture that collectively protect the system against unauthorized access, data breaches, and system compromise.</p>
+    <div class="formula">+--------------------------------------------+
+|     IoT SECURITY FUNCTION GROUP            |
++-------------------+------------------------+
+| Identity Mgmt     | Authentication         |
+| (IdM)             | (Verify identity)      |
++-------------------+------------------------+
+| Authorization     | Key Exchange &         |
+| (Access control)  | Management             |
++-------------------+------------------------+
+|       Trust & Reputation                   |
+|   (Behavioral evaluation of devices)       |
++--------------------------------------------+</div>
+    <h4>FC 1 — Identity Management (IdM) [2 marks]:</h4>
+    <ul>
+      <li>Assigns and manages unique identities for every IoT device, user, and service</li>
+      <li>Maintains a centralized identity registry; lifecycle management from provisioning to decommissioning</li>
+      <li>Identifiers: device certificates, UUID, or cryptographic keys</li>
+      <li>Prevents identity spoofing — only registered entities can participate</li>
+    </ul>
+    <h4>FC 2 — Authentication [2 marks]:</h4>
+    <ul>
+      <li>Verifies the claimed identity of a device or user before granting any system access</li>
+      <li>Mechanisms: X.509 certificates (PKI-based), shared secret tokens, challenge-response protocols</li>
+      <li>Supports <b>mutual authentication</b> — both device and server verify each other</li>
+      <li>Prevents fake device/server attacks at the point of connection</li>
+    </ul>
+    <h4>FC 3 — Authorization [1 mark]:</h4>
+    <ul>
+      <li>Determines what an authenticated entity is permitted to do within the system</li>
+      <li>Implements RBAC (Role-Based) or ABAC (Attribute-Based) Access Control</li>
+      <li>Enforces <b>least-privilege</b>: devices only access explicitly authorized resources</li>
+    </ul>
+    <h4>FC 4 — Key Exchange & Management [2 marks]:</h4>
+    <ul>
+      <li>Generates, distributes, stores, and rotates cryptographic keys for encryption/integrity</li>
+      <li>Protocols: Diffie-Hellman (key exchange); AES (symmetric); RSA/ECC (asymmetric)</li>
+      <li>Secure key storage in hardware (TPM/HSM) to prevent key extraction</li>
+      <li>Key lifecycle: creation → distribution → rotation → revocation</li>
+    </ul>
+    <h4>FC 5 — Trust & Reputation [2 marks]:</h4>
+    <ul>
+      <li>Evaluates trustworthiness of each device dynamically based on observed behavior over time</li>
+      <li>Assigns trust scores; consistent compliant behavior = higher trust score</li>
+      <li>Automatically revokes/restricts access of misbehaving or compromised devices</li>
+      <li>Enables <b>network self-healing</b> — compromised nodes isolated without manual intervention</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Threat Analysis Techniques — STRIDE + DFDs <span class="badge">★ ×1 | 7 Marks</span></h3>
+    <p><b>Definition:</b> Threat analysis is the systematic process of uncovering security design flaws by identifying threat categories, mapping data flows, and analyzing processes. Output: prioritized threat list + mitigations.</p>
+    <h4>STRIDE Model [3 marks]:</h4>
+    <table>
+      <tr><th>Letter</th><th>Threat</th><th>Meaning</th><th>IoT Example</th></tr>
+      <tr><td>S</td><td>Spoofing</td><td>Impersonating a device/user</td><td>Fake temp sensor injecting false data</td></tr>
+      <tr><td>T</td><td>Tampering</td><td>Unauthorized data modification</td><td>Altering firmware update package</td></tr>
+      <tr><td>R</td><td>Repudiation</td><td>Denying an action was performed</td><td>Device denying it sent a command</td></tr>
+      <tr><td>I</td><td>Information Disclosure</td><td>Unauthorized data access</td><td>Eavesdropping on MQTT messages</td></tr>
+      <tr><td>D</td><td>Denial of Service</td><td>Making service unavailable</td><td>Flooding gateway with packets</td></tr>
+      <tr><td>E</td><td>Elevation of Privilege</td><td>Gaining unauthorized higher access</td><td>User gaining admin-level API access</td></tr>
+    </table>
+    <h4>Data Flow Diagrams (DFDs) [2 marks]:</h4>
+    <ul>
+      <li>DFDs map all components: processes, data stores, external entities, and data flows</li>
+      <li>Trust boundaries drawn to separate zones of different trust levels (e.g., device vs. cloud)</li>
+      <li>Each crossing of a trust boundary = potential threat point to analyze</li>
+      <li>STRIDE applied per element type: Processes → STRIDE; Data stores → TID; Data flows → TID; External entities → SR</li>
+    </ul>
+    <h4>Process & Output [2 marks]:</h4>
+    <ul>
+      <li>Tool generates threats automatically per component → analyst rates severity using <b>DREAD</b> (Damage, Reproducibility, Exploitability, Affected users, Discoverability)</li>
+      <li>Output: threat list with mitigations → new use cases added to prevent each threat → updated security design</li>
+      <li>Iterative process — repeated each time architecture changes</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Use Case vs Misuse Case <span class="badge">★ ×1 | 6 Marks</span></h3>
+    <table>
+      <tr><th>Aspect</th><th>Use Case</th><th>Misuse Case</th></tr>
+      <tr><td><b>Definition</b></td><td>List of event steps defining expected/desired interactions between actor and system to achieve a goal</td><td>Defines behavior that should NOT happen — describes how an attacker could interact with the system</td></tr>
+      <tr><td><b>Purpose</b></td><td>Define desired system behavior</td><td>Identify what must NOT happen</td></tr>
+      <tr><td><b>Used for</b></td><td>Requirements specification & system design</td><td>Threat modeling & attack prevention</td></tr>
+      <tr><td><b>Outcome</b></td><td>Functional requirements and acceptance criteria</td><td>Security requirements and countermeasures</td></tr>
+    </table>
+    <h4>Use Case Examples [3 marks]:</h4>
+    <ul>
+      <li>Secure boot — verifies firmware signature before executing</li>
+      <li>Firmware update — device authenticates source and verifies package integrity</li>
+      <li>Stored data encryption — AES-256 encryption at rest</li>
+      <li>Platform integrity protection — continuous integrity checks on running software</li>
+      <li>User authentication — MFA before admin access granted</li>
+      <li>Secure communication — TLS 1.3 enforced for all device-to-cloud communication</li>
+    </ul>
+    <h4>Misuse Case Examples [3 marks]:</h4>
+    <ul>
+      <li>Identity impersonation → prevention use case: strong mutual authentication</li>
+      <li>Eavesdropping on wireless traffic → prevention: mandatory encryption</li>
+      <li>Fake server attack → prevention: server certificate validation</li>
+      <li>TCP flooding (DoS) → prevention: rate limiting and traffic filtering</li>
+      <li>Unauthorized API access → prevention: OAuth2 token validation</li>
+      <li>Log tampering → prevention: append-only secure logging</li>
+    </ul>
+    <p><b>Key Relationship:</b> Misuse cases drive creation of additional use cases — together they ensure complete security coverage and close all design gaps.</p>
+  </div>
+
+  <div class="card">
+    <h3>Smart City Use Cases — Extended Detail <span class="badge yellow">★★★ ×4 | 6–8 Marks</span></h3>
+    <h4>1. Smart Parking [2 marks]:</h4>
+    <ul>
+      <li><b>Sensing:</b> Ultrasonic or IR occupancy sensors per bay + magnetometer sensors as alternative</li>
+      <li><b>Connectivity:</b> LoRa / NB-IoT transmits occupancy status to cloud gateway</li>
+      <li><b>Platform:</b> Cloud aggregates all bay data; updates availability map in real-time</li>
+      <li><b>Application:</b> Mobile app shows available spaces + navigation; dynamic pricing based on demand</li>
+      <li><b>3 User Types:</b> Driver (finds space, reduces fuel) | City Manager (utilization analytics, revenue policy) | Parking Operator (real-time occupancy, enforcement alerts, payment management)</li>
+      <li><b>Benefit:</b> Reduces urban traffic congestion by up to 30%</li>
+    </ul>
+    <h4>2. Smart Traffic Control [2 marks]:</h4>
+    <ul>
+      <li><b>Sensing:</b> Inductive loop detectors (count vehicles + speed) + overhead cameras with CV + radar sensors (all-weather)</li>
+      <li><b>Edge processing:</b> Controllers at each intersection analyze sensor data and adapt signal timing (green extension, phase skipping) based on real-time queue lengths</li>
+      <li><b>Centralized:</b> Traffic management center orchestrates multi-intersection green wave corridors</li>
+      <li><b>Emergency preemption:</b> GPS-equipped vehicles broadcast priority signals; system clears path automatically</li>
+      <li><b>Benefit:</b> 15–25% reduction in average travel time; priority routing cuts emergency response time</li>
+    </ul>
+    <h4>3. Air Pollution Monitoring [2 marks]:</h4>
+    <ul>
+      <li><b>Sensors:</b> CO₂, CO, NOₓ, PM2.5 (fine particulate), SO₂, ozone + temperature/humidity for calibration</li>
+      <li><b>Network:</b> Dense urban deployment of low-cost sensor nodes; LoRa (long range, low power) / NB-IoT (SIM-based)</li>
+      <li><b>Cloud:</b> Time-series DB stores readings; AQI computed per location; threshold alerts via SMS/email when limits exceeded (&lt;1 min)</li>
+      <li><b>Public:</b> Real-time color-coded AQI map (Green/Yellow/Red/Purple); historical trend charts</li>
+      <li><b>Policy use:</b> Traffic routing diversion, industrial emissions enforcement, urban planning decisions</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Smart Street Lighting — Extended Detail <span class="badge yellow">★★★ ×4 | 6–8 Marks</span></h3>
+    <p><b>Definition:</b> IoT-based system replacing conventional fixed-schedule lighting with adaptive, remotely managed LED lighting that responds to real-time conditions. Reduces energy by <b>50–70%</b>.</p>
+    <div class="formula">[Smart LED Pole Unit]
+  +-- PIR Occupancy Sensor (PIR) -------> Motion detection (10-20m range)
+  +-- Daylight Sensor (LDR) ------------> Ambient light / auto sunset-sunrise
+  +-- Energy Meter ---------------------> Per-pole kWh monitoring
+  +-- LED Driver Controller (PWM) ------> 0-100% brightness control
+  +-- Embedded Microcontroller ---------> Local decision logic (ARM-based)
+  +-- RF Module (LoRa / NB-IoT / PLC) -> Network uplink
+          |  (LoRaWAN / NB-IoT / PLC)
+          v
+[Area Gateway / Concentrator]
+          |  (Ethernet / Fiber / 4G backhaul)
+          v
+[Network Server / Cloud Platform]
+  +-- Device Management Server ---------> OTA updates, config
+  +-- Data Processing Engine -----------> Analytics, alerts
+  +-- Dashboard Backend ----------------> REST API
+          v
+[Control Center Dashboard / Mobile App]
+  - Real-time pole status map | Energy reports | Fault alerts | Override controls</div>
+    <h4>System Components [2 marks]:</h4>
+    <table>
+      <tr><th>Component</th><th>Detail</th></tr>
+      <tr><td>Smart LED fixture</td><td>Dimmable via PWM (0–100%); 10+ year lifespan</td></tr>
+      <tr><td>PIR sensor</td><td>Passive infrared; 10–20m detection range; triggers brightness ramp</td></tr>
+      <tr><td>LDR daylight sensor</td><td>Photoresistor; auto sunset/sunrise transitions — no fixed schedules</td></tr>
+      <tr><td>Energy meter</td><td>Real-time current draw + cumulative kWh per pole; anomaly detection</td></tr>
+      <tr><td>Embedded controller</td><td>ARM MCU; stores local dimming schedule; operates autonomously during connectivity loss</td></tr>
+      <tr><td>Communication module</td><td>LoRa (license-free, low-power, 5km), NB-IoT (cellular, SIM), PLC (data over power cables)</td></tr>
+    </table>
+    <h4>System Features [2 marks]:</h4>
+    <ul>
+      <li><b>Adaptive dimming:</b> Default 30% → ramps to 100% within 0.5s of occupancy → returns to 30% after 3-minute timeout</li>
+      <li><b>Energy metering:</b> Per-pole data uploaded to cloud every 15 minutes; enables carbon footprint reporting</li>
+      <li><b>Fault detection:</b> Open-circuit (lamp failure), over-current, communication loss alerts → auto work orders dispatched</li>
+      <li><b>Remote management:</b> Schedule upload, brightness override, group commands, OTA firmware — all via cloud dashboard</li>
+      <li><b>Group controls:</b> Poles in zones; city-wide events (emergency, festivals) trigger instant city-wide brightness changes</li>
+    </ul>
+    <h4>Network Selection [1 mark]:</h4>
+    <ul>
+      <li><b>LoRaWAN:</b> Preferred for large-area; ultra-low power; up to 10 years battery backup; public or private network</li>
+      <li><b>NB-IoT:</b> Cellular operator network; good indoor penetration; higher data rate; ongoing SIM costs</li>
+      <li><b>PLC (Power-Line Communication):</b> Uses existing electrical cables; no RF allocation; best for poles with no battery</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Air Pollution Monitoring — Sensor Specifications <span class="badge">★★ ×2 | 8 Marks</span></h3>
+    <div class="formula">[Sensor Node (Outdoor — Solar Powered)]
+  +-- CO2 (MH-Z19, NDIR) ---------------> 0–5000 ppm; greenhouse gas
+  +-- CO (MQ-7, electrochemical) -------> 10–1000 ppm; vehicle exhaust
+  +-- NOx (electrochemical) ------------> Vehicle & industrial emissions; respiratory disease
+  +-- PM2.5 (Optical particle counter) -> &lt;2.5µm particles; deepest lung penetration
+  +-- SO2 -----------------------------> Industrial/power generation emissions
+  +-- Temperature + Humidity (DHT22) --> Environmental calibration for sensor drift
+  +-- Microcontroller (ESP32/Arduino) -> Data aggregation & transmission
+  +-- Solar Panel + Battery -----------> Self-powered, no mains needed
+          |  (LoRa 868MHz / NB-IoT)
+          v
+[LoRa Gateway / NB-IoT Base Station]
+          |  (Internet / 4G backhaul)
+          v
+[Cloud Server]
+  +-- Time-Series Database (InfluxDB) -> Stores all readings with timestamps
+  +-- AQI Computation Engine ----------> 0–500 index (US EPA or CPCB method)
+  +-- Threshold Alert Engine ----------> SMS/email within &lt;1 min of exceedance
+  +-- Data API ------------------------> Serves dashboard and third parties
+          v
+[Public Dashboard] + [Authority Alert System]
+  Color-coded map: Green=Good | Yellow=Moderate | Orange=Unhealthy | Red=Very Unhealthy | Purple=Hazardous</div>
+    <h4>Sensor Specifications [2 marks]:</h4>
+    <table>
+      <tr><th>Sensor</th><th>Principle</th><th>Range</th><th>What it measures</th></tr>
+      <tr><td>CO₂ (MH-Z19)</td><td>NDIR (Non-Dispersive Infrared)</td><td>0–5000 ppm</td><td>Indoor air quality, building ventilation</td></tr>
+      <tr><td>CO (MQ-7)</td><td>Electrochemical</td><td>10–1000 ppm</td><td>Vehicle exhaust, incomplete combustion</td></tr>
+      <tr><td>NOx</td><td>Electrochemical</td><td>NO + NO₂</td><td>Vehicle engines and power plants; respiratory disease</td></tr>
+      <tr><td>PM2.5</td><td>Optical particle counter</td><td>&lt;2.5µm</td><td>Fine particles penetrating deep into lungs</td></tr>
+      <tr><td>SO₂</td><td>Electrochemical</td><td>—</td><td>Fossil fuel burning; industrial/power activity</td></tr>
+      <tr><td>DHT22 (Temp/Humidity)</td><td>Capacitive + NTC</td><td>—40°C to 80°C</td><td>Environmental calibration (many gas sensors drift with temp)</td></tr>
+    </table>
+    <h4>Communication [1 mark]:</h4>
+    <ul>
+      <li><b>LoRa:</b> 868/915 MHz unlicensed; 5–15 km urban range; 0.3–50 kbps; 2–5 year battery life on AA batteries</li>
+      <li><b>NB-IoT:</b> Better indoor penetration; requires SIM + operator contract; lower latency</li>
+    </ul>
+    <h4>Cloud Processing [1 mark]:</h4>
+    <ul>
+      <li><b>InfluxDB / TimescaleDB:</b> Efficient storage and querying of high-frequency timestamped sensor data</li>
+      <li><b>AQI Calculation:</b> Standardized US EPA or CPCB method converts raw concentrations to 0–500 index</li>
+      <li><b>Data normalization:</b> Temperature/humidity correction applied before storage</li>
     </ul>
   </div>
 
